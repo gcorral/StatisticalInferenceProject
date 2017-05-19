@@ -1,0 +1,6 @@
+---
+title: "Simulation Exercise"
+author: "Gregorio Corral"
+date: "19 de mayo de 2017"
+output: pdf
+---
