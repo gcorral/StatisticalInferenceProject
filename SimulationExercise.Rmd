@@ -1,6 +1,112 @@
 ---
-title: "Simulation Exercise"
+title: "Comparation between the exponential distribution and the Central Limit Theorem"
 author: "Gregorio Corral"
 date: "19 de mayo de 2017"
-output: pdf
+output: pdf_document
 ---
+
+<!--
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(ggplot2)
+
+```
+
+Comparation between the exponential distribution and the Central Limit Theorem
+===============================================================================
+
+In this project you will investigate the exponential distribution in R and compare it with the Central Limit Theorem.
+
+Simulations
+-----------
+
+The exponential distribution is simulated in R with rexp(n, lambda) where lambda is the rate parameter. The mean of exponential distribution is 1/lambda and the standard deviation is also 1/lambda. Lambda is set to  0.2 for all of the simulations. We will investigate the distribution of averages of 40
+exponentials.
+
+```{r}
+
+hist(rexp(1000))
+
+```
+
+Sample Mean versus Theoretical Mean
+-----------------------------------
+
+Sample mean are:
+
+```{r}
+
+exp_sample_means <- NULL
+
+for(i in 1:1000) {
+  exp_sample_means <- c(exp_sample_means, mean(rexp(40, 0.2)))
+}
+
+hist(exp_sample_means)
+
+mean(exp_sample_means)
+
+```
+
+And theoretical mean value are 1/lambda:
+
+```{r}
+
+1/0.2
+
+```
+
+Sample Variance versus Theoretical Variance
+-------------------------------------------
+
+In relation with the variace, the variance theoritecal values is 
+$\sigma^2 = \frac{frac{1}{lambda^2}}{n}$
+
+```{r}
+
+(1/(0.2^2))/40
+
+```
+
+The sample variace is:
+
+```{r}
+
+var(exp_sample_means)
+
+```
+
+
+Distribution
+------------
+
+```{r}
+exp_sample_means_df <- as.data.frame(exp_sample_means)
+
+ggplot(exp_sample_means_df, aes(x = exp_sample_means)) + 
+  geom_histogram(binwidth = 0.4, aes(y = density)) +
+  stat_function(aes(x = c(2, 8)), fun = dnorm, args = list(mean = 5, sd = sqrt(0.625))) +
+  xlab('Sample mean') +
+  ylab('Density') +
+  ggtitle('Comparison of the sample distribution and normal')
