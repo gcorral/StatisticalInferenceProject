@@ -30,6 +30,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 
 library(ggplot2)
+#library(cowplot)
+#library(gridExtra)
+library(grid)
+library(lattice)
 
 ```
 
@@ -102,11 +106,70 @@ Distribution
 ------------
 
 ```{r}
-exp_sample_means_df <- as.data.frame(exp_sample_means)
 
-ggplot(exp_sample_means_df, aes(x = exp_sample_means)) + 
-  geom_histogram(binwidth = 0.4, aes(y = density)) +
-  stat_function(aes(x = c(2, 8)), fun = dnorm, args = list(mean = 5, sd = sqrt(0.625))) +
+exp_sample_means_10 <- NULL
+
+for(i in 1:1000) {
+  exp_sample_means_10 <- c(exp_sample_means_10, mean(rexp(10, 0.2)))
+}
+
+exp_sample_means_20 <- NULL
+
+for(i in 1:1000) {
+  exp_sample_means_20 <- c(exp_sample_means_20, mean(rexp(20, 0.2)))
+}
+
+exp_sample_means_30 <- NULL
+
+for(i in 1:1000) {
+  exp_sample_means_30 <- c(exp_sample_means_30, mean(rexp(30, 0.2)))
+}
+
+exp_sample_means_df_10 <- as.data.frame(exp_sample_means_10)
+
+g10 <- ggplot(exp_sample_means_df_10, aes(x = exp_sample_means_10)) + 
+  geom_histogram(binwidth = 0.4, color = 'black', fill = 'white', aes(y = ..density..)) + 
+  stat_function(aes(x = c(2, 8)), fun = dnorm, color = 'red', args = list(mean = 5, sd = sqrt(0.625))) +
   xlab('Sample mean') +
-  ylab('Density') +
-  ggtitle('Comparison of the sample distribution and normal')
+  ylab('Density')
+
+exp_sample_means_df_20 <- as.data.frame(exp_sample_means_20)
+
+g20 <- ggplot(exp_sample_means_df_20, aes(x = exp_sample_means_20)) + 
+  geom_histogram(binwidth = 0.4, color = 'black', fill = 'white', aes(y = ..density..)) + 
+  stat_function(aes(x = c(2, 8)), fun = dnorm, color = 'red', args = list(mean = 5, sd = sqrt(0.625))) +
+  xlab('Sample mean') +
+  ylab('Density')
+
+exp_sample_means_df_30 <- as.data.frame(exp_sample_means_30)
+
+g30 <- ggplot(exp_sample_means_df_30, aes(x = exp_sample_means_30)) + 
+  geom_histogram(binwidth = 0.4, color = 'black', fill = 'white', aes(y = ..density..)) + 
+  stat_function(aes(x = c(2, 8)), fun = dnorm, color = 'red', args = list(mean = 5, sd = sqrt(0.625))) +
+  xlab('Sample mean') +
+  ylab('Density')
+
+g40 <- ggplot(exp_sample_means_df, aes(x = exp_sample_means)) + 
+  geom_histogram(binwidth = 0.4, color = 'black', fill = 'white', aes(y = ..density..)) + 
+  stat_function(aes(x = c(2, 8)), fun = dnorm, color = 'red', args = list(mean = 5, sd = sqrt(0.625))) +
+  xlab('Sample mean') +
+  ylab('Density')
+
+
+g <- grid.arrange(g10, g20, g30, g40, labels=c("A", "B", "C", "D"), ncol = 4, nrow = 1)
+
+#g <- arrangeGrob(g10, g20, g30, g40, labels=c("A", "B", "C", "D"), ncol = 4, nrow = 1)
+
+print(g)
+
+#png("ExpNormal.png")
+
+
+#ggplot(exp_sample_means_df, aes(x = exp_sample_means)) + 
+#  geom_histogram(binwidth = 0.4, aes(y = density)) +
+#  stat_function(aes(x = c(2, 8)), fun = dnorm, args = list(mean = 5, sd = sqrt(0.625))) +
+#  xlab('Sample mean') +
+#  ylab('Density') +
+#  ggtitle('Comparison of the sample distribution and normal')
+
+```
